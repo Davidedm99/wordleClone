@@ -1,9 +1,18 @@
 const screenTiles = document.querySelector('.tile-container');
 const screenKeys = document.querySelector('.key-container');
 const messageDisplay = document.querySelector('.message-container');
+var word;
 
-const word = 'SUPER'
+const url = 'https://random-word-api.herokuapp.com/word?length=5';
+const options = {
+	method: 'GET',
+};
 
+const getWord = () => {
+    fetch(url, options).then(response => response.json())
+    .then((data) => {
+        word = data[0] })
+}
 
 const guesses = [
     ['','','','',''],
@@ -89,6 +98,9 @@ const deleteLetter = () => {
 }
 
 const checkRow = () => {
+    console.log(word)
+    console.log(guess)
+
     const guess = guesses[currentRow].join('')
     tileColor()
 
@@ -116,8 +128,8 @@ const winningBanner = () => {
     let winningMessage = document.getElementById('result-message')
     winningMessage.innerHTML+= "Congratulations!"
 
-    let winningImage = document.getElementById('img').src="/assets/Trophy_Flat_Icon.png"
-    let winningImage2 = document.getElementById('img2').src="/assets/Trophy_Flat_Icon.png"
+    let winningImage = document.getElementById('img').src="assets/Trophy_Flat_Icon.png"
+    let winningImage2 = document.getElementById('img2').src="assets/Trophy_Flat_Icon.png"
 
     let winningMessage2 = document.getElementById('result-message2')
     winningMessage2.innerHTML+= "You Won!"
@@ -134,8 +146,8 @@ const losingBanner = () => {
     let winningMessage = document.getElementById('result-message')
     winningMessage.innerHTML+= "Oh no!"
 
-    let winningImage = document.getElementById('img').src="/assets/redX.png"
-    let winningImage2 = document.getElementById('img2').src="/assets/redX.png"
+    let winningImage = document.getElementById('img').src="assets/redX.png"
+    let winningImage2 = document.getElementById('img2').src="assets/redX.png"
 
     let winningMessage2 = document.getElementById('result-message2')
     winningMessage2.innerHTML+= "You Lost!"
@@ -145,9 +157,17 @@ const losingBanner = () => {
 } 
 
 //color the key inside the keyboard
+//the problem lays in handling the recolor of letters that should not happen
 const keyColor = (key, color) => {
     const letter = document.getElementById(key)
-    letter.classList.add(color)
+    if(letter.classList.contains('green-overlay'))
+        return
+    else if(letter.classList.contains('yellow-overlay') && color == 'green-overlay'){
+            letter.classList.remove('yellow-overlay')
+            letter.classList.add('green-overlay')
+    }else{
+        letter.classList.add(color)
+    }
 }
 
 //change all the tiles of a row with che childNodes attribute
@@ -172,3 +192,4 @@ const tileColor = () => {
     })
 }
 
+window.addEventListener("load", getWord);
