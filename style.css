@@ -1,0 +1,198 @@
+*{
+    color:#ffffff;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+    'Lucida Sans', Arial, sans-serif;
+}
+
+body{
+    background-color: #121213;
+    height: 100vh;
+}
+
+.game-container{
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title-container{
+    text-align: center;
+    width: 500px;
+    border-bottom: solid 1px #3a3a3c;
+}
+
+.tile-container{
+    width: 350px;
+    margin-bottom: 20px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tile-container div{
+    display: flex;
+}
+
+.tile-container .tile{
+    width: 65px;
+    height: 65px;
+    border: 2px solid #3a3a3c;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2px;
+}
+
+.key-container{
+    width: 500px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.key-container button{
+    width:40px;
+    height: 48px;
+    border-radius: 4px;
+    border: none;
+    background-color: #818384;
+    color: #ffffff;
+    margin: 2px;
+}
+
+/*those are used to operate on a specific child of the array*/
+.key-container button:nth-child(20),
+.key-container button:nth-child(28){
+    width: 60px;
+}
+
+.key-container button:nth-child(1),
+.key-container button:nth-child(20){
+    margin-left: 28px;
+}
+
+.key-container button:nth-child(10),
+.key-container button:nth-child(19){
+    margin-right: 28px;
+}
+
+.key-container button:nth-child(11){
+    margin-left: 50px;
+}
+
+.message-container{
+    position: absolute;
+    background-color: #3a3a3c;
+    width: auto;
+    height:40%;
+    top: 20%;
+    margin: auto;
+    border-radius: 7px;
+
+    z-index: 10;
+}
+
+.message{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+h1{
+    font-size:xx-large;
+    text-align: center;
+}
+
+h2{
+    font-size:x-large;
+    text-align: center; 
+}
+
+#result{
+    margin-top: 30px; 
+    font-size: large;  
+    text-align: center;
+}
+
+.winner{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: auto;
+    height: 100px;
+}
+
+#img{
+    height: 80%;
+    transform: scale(1);
+    animation: pulse 2s infinite;
+}
+
+#img2{
+    height: 80%;
+    transform: scale(1);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		
+	}
+
+	70% {
+		transform: scale(1.25);
+		
+	}
+
+	100% {
+		transform: scale(0.95);
+		
+	}
+}
+
+p{
+    text-align: center;
+    margin: 15px;
+    font-style: italic;
+    font-size: medium;
+}
+
+/*custom classes*/
+/*tile flipping*/
+.tile.flip{
+    animation: 0.65s linear flipping;
+}
+
+@keyframes flipping {
+    0% {
+        transform: rotateX(0deg);
+    }
+    50% {
+        transform: rotateX(90deg);
+    }
+    100% {        
+        transform: rotateX(0deg);
+    }
+}
+
+/*color of the tiles*/
+.green-overlay{
+    background-color: #538d4e !important;
+    border: none !important; 
+}
+
+.yellow-overlay{
+    background-color: #b59f3a !important;
+    border: none !important; 
+}
+
+.grey-overlay{
+    background-color: #3a3a3c !important;
+    border: none !important; 
+}
