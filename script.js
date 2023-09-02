@@ -3,15 +3,17 @@ const screenKeys = document.querySelector('.key-container');
 const messageDisplay = document.querySelector('.message-container');
 var word;
 
-const url = 'https://random-word-api.herokuapp.com/word?length=5';
+const wordUrl = 'https://random-word-api.herokuapp.com/word?length=5';
+const vocabularyUrl = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
 const options = {
 	method: 'GET',
 };
 
+//api request for a random 5 letter word
 const getWord = () => {
-    fetch(url, options).then(response => response.json())
-    .then((data) => {
-        word = data[0] })
+    fetch(wordUrl, options)           
+    .then(response => response.json())
+    .then(data => word = (data[0]));
 }
 
 const guesses = [
@@ -25,7 +27,6 @@ const guesses = [
 
 let currentRow = 0
 let currentTile = 0
-let isGameOver = false
 
 //creation of the rows for the guesses
 guesses.forEach((guessRow , guessRowIndex) => {
@@ -58,6 +59,19 @@ keys.forEach(key => {
     screenKeys.append(buttonElement)
 })
 
+const checkWord = () => {
+    const guess = guesses[currentRow].join('').toLowerCase()
+    console.log(vocabularyUrl + guess)
+      
+    var http = new XMLHttpRequest();
+    http.open('HEAD', vocabularyUrl + guess, false);
+    http.send();
+    if (http.status != 404)
+        checkRow()
+    else
+        nonExistentWord()
+}
+
 const handleClick = (key) => {
     //console.log('click', key)
     if(key === 'back'){
@@ -66,7 +80,7 @@ const handleClick = (key) => {
         return
     }
     if(key === 'enter'){
-        checkRow()
+        checkWord()
         return
     }
     addLetter(key)
@@ -98,14 +112,11 @@ const deleteLetter = () => {
 }
 
 const checkRow = () => {
-    console.log(word)
-    console.log(guess)
-
-    const guess = guesses[currentRow].join('')
+    const guess = guesses[currentRow].join('').toLowerCase()
     tileColor()
 
     if(currentTile > 4){
-        if(word == guess){
+        if(word == guess.toLowerCase()){
             setTimeout(winningBanner, 3000)
             return
         }
@@ -118,6 +129,20 @@ const checkRow = () => {
             currentTile = 0
         }
     }
+}
+
+const nonExistentWord = () => {
+    //animation 
+    const rowTiles = document.querySelector('#guessRow-' + currentRow).childNodes
+    rowTiles.forEach((tile, index) => {
+        const dataLetter = tile.getAttribute('data')
+        const letter = dataLetter.toLowerCase()
+
+        setTimeout(() => {tile.classList.add('shake')}, 150 * index)
+        tile.classList.remove('shake')
+        setTimeout(() => {deleteLetter()}, 300 * index)
+    })
+    alert("please, enter a valid word")
 }
 
 //this function fills up the banner in case the player guessed the right word
@@ -153,7 +178,7 @@ const losingBanner = () => {
     winningMessage2.innerHTML+= "You Lost!"
 
     const resultDiv = document.getElementById('result')
-    resultDiv.innerHTML += "You took too many guesses to find the word, that was: " + word
+    resultDiv.innerHTML += "You took too many guesses, the word was: " + word
 } 
 
 //color the key inside the keyboard
@@ -171,17 +196,19 @@ const keyColor = (key, color) => {
 }
 
 //change all the tiles of a row with che childNodes attribute
+//problem lays in the fetch that gives a lowercase while i use a lowercase
 const tileColor = () => {
     const rowTiles = document.querySelector('#guessRow-' + currentRow).childNodes
     rowTiles.forEach((tile, index) => {
         const dataLetter = tile.getAttribute('data')
+        const letter = dataLetter.toLowerCase()
 
         setTimeout(() => {
             tile.classList.add('flip')
-            if(dataLetter == word[index]){
+            if(letter == word[index]){
                 tile.classList.add('green-overlay')
                 keyColor(dataLetter, 'green-overlay')
-            }else if(word.includes(dataLetter)){
+            }else if(word.includes(letter)){
                 tile.classList.add('yellow-overlay')
                 keyColor(dataLetter, 'yellow-overlay')
             }else{
