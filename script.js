@@ -61,7 +61,6 @@ keys.forEach(key => {
 
 const checkWord = () => {
     const guess = guesses[currentRow].join('').toLowerCase()
-    console.log(vocabularyUrl + guess)
       
     var http = new XMLHttpRequest();
     http.open('HEAD', vocabularyUrl + guess, false);
@@ -135,14 +134,17 @@ const nonExistentWord = () => {
     //animation 
     const rowTiles = document.querySelector('#guessRow-' + currentRow).childNodes
     rowTiles.forEach((tile, index) => {
+        //this little check is needed in order to shake multiple times in a row removing the animation
+        if(tile.classList.contains('shake')){
+                tile.classList.remove('shake')
+        }
         const dataLetter = tile.getAttribute('data')
         const letter = dataLetter.toLowerCase()
 
         setTimeout(() => {tile.classList.add('shake')}, 150 * index)
-        tile.classList.remove('shake')
-        setTimeout(() => {deleteLetter()}, 300 * index)
+        deleteLetter()
     })
-    alert("please, enter a valid word")
+
 }
 
 //this function fills up the banner in case the player guessed the right word
@@ -202,6 +204,9 @@ const tileColor = () => {
     rowTiles.forEach((tile, index) => {
         const dataLetter = tile.getAttribute('data')
         const letter = dataLetter.toLowerCase()
+
+        //avoid problems with the flip animation
+        tile.classList.remove('shake')
 
         setTimeout(() => {
             tile.classList.add('flip')
